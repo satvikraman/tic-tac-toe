@@ -1,10 +1,10 @@
 const player = "O";
 const computer = "X";
 
-var active_player = player;
+var active_player = computer;
 // "computer" - Play with the computer
 // "player"   - 2 player game
-var opponent = "player"
+var opponent = "computer"
 
 let board_full = false;
 let play_board = ["", "", "", "", "", "", "", "", ""];
@@ -22,7 +22,6 @@ check_board_complete = () => {
   });
   board_full = flag;
 };
-
 
 const check_line = (a, b, c) => {
   return (
@@ -80,7 +79,6 @@ const check_for_winner = () => {
   }
 };
 
-
 const render_board = () => {
   board_container.innerHTML = ""
   play_board.forEach((e, i) => {
@@ -106,10 +104,10 @@ const addPlayerMove = e => {
     if (opponent == "computer") 
       addComputerMove()
     else {
-      if(active_player == player)
-        active_player = computer;
-      else
+      if(active_player == computer)
         active_player = player;
+      else
+        active_player = computer;
     }
   }
 };
@@ -121,6 +119,7 @@ const addComputerMove = () => {
     } while (play_board[selected] != "");
     play_board[selected] = computer;
     game_loop();
+    active_player = player;
   }
 };
 
@@ -134,16 +133,14 @@ const reset_board = () => {
   render_board();
 };
 
-//initial render
-render_board();
-
 /* When the user selects the opponent as computer */
 function opponentComputer() {
   opponent = "computer"
   document.getElementById("dropDownContentID").classList.toggle("show");
   playingAgainst.innerText = "Playing against Computer!!";
-  reset_board()
-  active_player = player
+  reset_board();
+  addComputerMove();
+  active_player = player;
 }
 
 /* When the user selects the opponent as player */
@@ -154,6 +151,7 @@ function opponentPlayer() {
   reset_board()
   active_player = player
 }
+
 function opponentAI() {
   opponent = "AI"
   document.getElementById("dropDownContentID").classList.toggle("show");
@@ -165,3 +163,7 @@ function opponentAI() {
 function buttonClick() {
   document.getElementById("dropDownContentID").classList.toggle("show");
 }
+
+addComputerMove();
+//initial render
+render_board();
