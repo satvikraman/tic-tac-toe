@@ -1,11 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <title>Satvik's project</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Tick-Tac-Toe</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
-  <h1>Satvik's 1st project</h1>
+    <div class="container">
+        <h1>Tic-Tac-Toe</h1>
+
+        <div class="selectOpponent">
+            <button onclick=buttonClick() class="dropButton">Select Opponent <i class="fa fa-caret-down"></i></button>
+            <div id="dropDownContentID" class="dropDownContent">
+                <a href=# onclick="opponentComputer()">Computer</a>
+                <a href=# onclick="opponentPlayer()">Another Player</a>
+                <a href=# onclick="opponentAI()">AI Player</a>    
+            </div>
+        </div>
+
+        <div>
+        <h2 id="playingAgainst"></h2>
+        </div>
+
+        <div class="play-area">
+
+        </div>
+        <h2 id="winner"></h2>
+        <button onclick="reset_board()">RESET</button>
+    </div>
+    <script src="app.js"></script>
 </body>
+
 </html>
