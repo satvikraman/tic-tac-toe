@@ -1,13 +1,13 @@
 const player = "O";
 const computer = "X";
 
-var active_player = computer;
 // "computer" - Play with the computer
 // "player"   - 2 player game
 var opponent = "computer"
+var active_player;
 
-let board_full = false;
-let play_board = ["", "", "", "", "", "", "", "", ""];
+var board_full = false;
+var play_board = ["", "", "", "", "", "", "", "", ""];
 
 const board_container = document.querySelector(".play-area");
 
@@ -123,6 +123,19 @@ const addComputerMove = () => {
   }
 };
 
+const chooseRandomPlayer = () => {
+  if (parseInt(Math.random()*10) % 2 == 0) {
+    active_player = player;
+    console.log("Player to play first")
+  }
+  else {
+    active_player = computer;
+    addComputerMove();
+    console.log("Computer to play first")
+  }
+}
+
+
 const reset_board = () => {
   play_board = ["", "", "", "", "", "", "", "", ""];
   board_full = false;
@@ -130,6 +143,9 @@ const reset_board = () => {
   winner.classList.remove("computerWin");
   winner.classList.remove("draw");
   winner.innerText = "";
+  if (opponent == "computer") {
+    chooseRandomPlayer();
+  }
   render_board();
 };
 
@@ -139,7 +155,6 @@ function opponentComputer() {
   document.getElementById("dropDownContentID").classList.toggle("show");
   playingAgainst.innerText = "Playing against Computer!!";
   reset_board();
-  addComputerMove();
   active_player = player;
 }
 
@@ -164,6 +179,8 @@ function buttonClick() {
   document.getElementById("dropDownContentID").classList.toggle("show");
 }
 
-addComputerMove();
+if (opponent == "computer") {
+  chooseRandomPlayer();
+}
 //initial render
 render_board();
