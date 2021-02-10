@@ -8,6 +8,16 @@ var active_player;
 
 var board_full = false;
 var play_board = ["", "", "", "", "", "", "", "", ""];
+var moveTTT = [
+  [4, 0, 8],
+  [4, 2, 6],
+  [4, 1, 7],
+  [4, 3, 5],
+  [0, 2, 1],
+  [6, 8, 7],
+  [0, 6, 3],
+  [2, 8, 5]  
+];
 
 const board_container = document.querySelector(".play-area");
 
@@ -114,9 +124,59 @@ const addPlayerMove = e => {
 
 const addComputerMove = () => {
   if (!board_full) {
+    /*
     do {
       selected = Math.floor(Math.random() * 9);
-    } while (play_board[selected] != "");
+    } while (play_board[selected] != "");*/
+
+    let maxDirC = 0, maxDirP = 0, maxScoreC = 0, maxScoreP = 0;
+    let dir;
+    for(dir = 0; dir < 8; dir++) {
+      let a, b, c;
+      let scoreP, scoreC;
+      // extract cell values 
+      a = play_board[moveTTT[dir][0]];
+      b = play_board[moveTTT[dir][1]];
+      c = play_board[moveTTT[dir][2]];
+
+      // score for player 
+      scoreP = ((a==player)+(b==player)+(c==player))*((a!=computer)*(b!=computer)*(c!=computer));
+      // score for computer
+      scoreC = ((a==computer)+(b==computer)+(c==computer))*((a!=player)*(b!=player)*(c!=player));
+      // Finding highest score and direction for player
+      if (scoreP > maxScoreP) {
+        maxScoreP = scoreP;
+        maxDirP = dir;
+      }
+      // Finding highest score and direction for computer
+      if (scoreC > maxScoreC) {
+        maxScoreC = scoreC;
+        maxDirC = dir;
+      }
+    }
+
+    // Blocking the player's move
+    if (maxScoreP > maxScoreC) {
+      for (var i=0; i<3; i++) {
+        let index;
+        index = moveTTT[maxDirP][i];
+        if (play_board[index] == "") {
+          selected = index;
+          break;
+        }
+      }
+    }
+    else {
+      for (var i=0; i<3; i++) {
+        let index;
+        index = moveTTT[maxDirC][i];
+        if (play_board[index] == "") {
+          selected = index;
+          break;  
+        }
+      }
+    }
+    console.log(selected)
     play_board[selected] = computer;
     game_loop();
     active_player = player;
