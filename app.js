@@ -3,7 +3,7 @@ const computer = "X";
 
 // "computer" - Play with the computer
 // "player"   - 2 player game
-var opponent = "computer"
+var opponent = "player"
 var active_player;
 
 var board_full = false;
@@ -240,7 +240,13 @@ function buttonClick() {
 }
 
 if (opponent == "computer") {
+  playingAgainst.innerText = "Playing against Computer!!";
   chooseRandomPlayer();
 }
+else {
+  playingAgainst.innerText = "Playing against another player!!";
+  active_player = player;
+}
+
 //initial render
 render_board();
