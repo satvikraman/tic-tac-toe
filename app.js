@@ -1,13 +1,23 @@
 const player = "O";
 const computer = "X";
 
-var active_player = player;
 // "computer" - Play with the computer
 // "player"   - 2 player game
 var opponent = "player"
+var active_player;
 
-let board_full = false;
-let play_board = ["", "", "", "", "", "", "", "", ""];
+var board_full = false;
+var play_board = ["", "", "", "", "", "", "", "", ""];
+var moveTTT = [
+  [4, 0, 8],
+  [4, 2, 6],
+  [4, 1, 7],
+  [4, 3, 5],
+  [0, 2, 1],
+  [6, 8, 7],
+  [0, 6, 3],
+  [2, 8, 5]  
+];
 
 const board_container = document.querySelector(".play-area");
 
@@ -22,7 +32,6 @@ check_board_complete = () => {
   });
   board_full = flag;
 };
-
 
 const check_line = (a, b, c) => {
   return (
@@ -80,7 +89,6 @@ const check_for_winner = () => {
   }
 };
 
-
 const render_board = () => {
   board_container.innerHTML = ""
   play_board.forEach((e, i) => {
@@ -106,23 +114,87 @@ const addPlayerMove = e => {
     if (opponent == "computer") 
       addComputerMove()
     else {
-      if(active_player == player)
-        active_player = computer;
-      else
+      if(active_player == computer)
         active_player = player;
+      else
+        active_player = computer;
     }
   }
 };
 
 const addComputerMove = () => {
   if (!board_full) {
+    /*
     do {
       selected = Math.floor(Math.random() * 9);
-    } while (play_board[selected] != "");
+    } while (play_board[selected] != "");*/
+
+    let maxDirC = 0, maxDirP = 0, maxScoreC = 0, maxScoreP = 0;
+    let dir;
+    for(dir = 0; dir < 8; dir++) {
+      let a, b, c;
+      let scoreP, scoreC;
+      // extract cell values 
+      a = play_board[moveTTT[dir][0]];
+      b = play_board[moveTTT[dir][1]];
+      c = play_board[moveTTT[dir][2]];
+
+      // score for player 
+      scoreP = ((a==player)+(b==player)+(c==player))*((a!=computer)*(b!=computer)*(c!=computer));
+      // score for computer
+      scoreC = ((a==computer)+(b==computer)+(c==computer))*((a!=player)*(b!=player)*(c!=player));
+      // Finding highest score and direction for player
+      if (scoreP > maxScoreP) {
+        maxScoreP = scoreP;
+        maxDirP = dir;
+      }
+      // Finding highest score and direction for computer
+      if (scoreC > maxScoreC) {
+        maxScoreC = scoreC;
+        maxDirC = dir;
+      }
+    }
+
+    // Blocking the player's move
+    if (maxScoreP > maxScoreC) {
+      for (var i=0; i<3; i++) {
+        let index;
+        index = moveTTT[maxDirP][i];
+        if (play_board[index] == "") {
+          selected = index;
+          break;
+        }
+      }
+    }
+    else {
+      for (var i=0; i<3; i++) {
+        let index;
+        index = moveTTT[maxDirC][i];
+        if (play_board[index] == "") {
+          selected = index;
+          break;  
+        }
+      }
+    }
+    console.log(selected)
     play_board[selected] = computer;
     game_loop();
+    active_player = player;
   }
 };
+
+const chooseRandomPlayer = () => {
+  if (parseInt(Math.random()*10) % 2 == 0) {
+    active_player = player;
+    console.log("Player to play first")
+  }
+  else {
+    active_player = computer;
+    addComputerMove();
+    console.log("Computer to play first")
+  }
+}
+
 
 const reset_board = () => {
   play_board = ["", "", "", "", "", "", "", "", ""];
@@ -131,19 +203,19 @@ const reset_board = () => {
   winner.classList.remove("computerWin");
   winner.classList.remove("draw");
   winner.innerText = "";
+  if (opponent == "computer") {
+    chooseRandomPlayer();
+  }
   render_board();
 };
-
-//initial render
-render_board();
 
 /* When the user selects the opponent as computer */
 function opponentComputer() {
   opponent = "computer"
   document.getElementById("dropDownContentID").classList.toggle("show");
   playingAgainst.innerText = "Playing against Computer!!";
-  reset_board()
-  active_player = player
+  reset_board();
+  active_player = player;
 }
 
 /* When the user selects the opponent as player */
@@ -154,6 +226,7 @@ function opponentPlayer() {
   reset_board()
   active_player = player
 }
+
 function opponentAI() {
   opponent = "AI"
   document.getElementById("dropDownContentID").classList.toggle("show");
@@ -165,3 +238,15 @@ function opponentAI() {
 function buttonClick() {
   document.getElementById("dropDownContentID").classList.toggle("show");
 }
+
+if (opponent == "computer") {
+  playingAgainst.innerText = "Playing against Computer!!";
+  chooseRandomPlayer();
+}
+else {
+  playingAgainst.innerText = "Playing against another player!!";
+  active_player = player;
+}
+
+//initial render
+render_board();
